@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# express-babel-starter
-=======
 # starter express app template
 
 * node with babel
