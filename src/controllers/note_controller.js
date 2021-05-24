@@ -15,16 +15,17 @@ export const deleteNote = (id) => {
   return Note.deleteOne({ _id: id });
 };
 
-export const createNote = (fields) => {
+export const createNote = async (fields) => {
   // you know the drill. create a new Note mongoose object
   // return .save()
   const note = new Note();
-  note.title = fields.title;
-  note.x = fields.x;
-  note.y = fields.y;
-  note.zIndex = fields.zIndex;
-  note.text = fields.text;
-  return note.save();
+  note.title = fields;
+  note.x = 400;
+  note.y = 12;
+  note.zIndex = 1;
+  note.content = '';
+  const newNote = await note.save();
+  return newNote;
 };
 
 export const updateNote = (id, fields) => {

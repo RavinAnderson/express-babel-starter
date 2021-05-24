@@ -5,7 +5,9 @@ const NoteSchema = new Schema({
   x: Number,
   y: Number,
   zIndex: Number,
-  text: String,
+  content: String,
+}, {
+  toObject: { virtuals: true },
   toJSON: { virtuals: true },
 });
 

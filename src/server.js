@@ -7,12 +7,24 @@ import socketio from 'socket.io';
 import http from 'http';
 import throttle from 'lodash.throttle';
 import debounce from 'lodash.debounce';
+import mongoose from 'mongoose';
 import * as Notes from './controllers/note_controller';
+
 
 // initialize
 const app = express();
 const server = http.createServer(app);
-const io = socketio(server);
+const io = socketio(server, {
+  cors: {
+    origin: 'http://localhost:8080',
+    methods: ['GET'],
+  },
+});
+
+const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/notes';
+mongoose.connect(mongoURI);
+// set mongoose promises to es6 default
+mongoose.Promise = global.Promise;
 
 // enable/disable cross origin resource sharing if necessary
 app.use(cors());
@@ -93,14 +105,13 @@ io.on('connection', (socket) => {
   // on update note do what is needful
   socket.on('updateNote', (id, fields) => {
     Notes.updateNote(id, fields).then(() => {
-      if (fields.text) {
+      if (fields.content) {
         pushNotes();
       } else {
         pushNotesSmoothed();
       }
     });
   });
-
 
   // on deleteNote do what is needful
   socket.on('deleteNote', (id) => {
